@@ -7,7 +7,15 @@
     <link rel="stylesheet" href="./screen.css">
   </head>
   <body ng-app="mainAngularApp" ng-controller="mainAppController">
-    {{greeting}}
+    <!-- {{greeting}} -->
+    <section ng-repeat="category in categoryData">
+      <h2>{{category.title}}</h2>
+      <section ng-class="question" ng-repeat="clue in category.clues">
+        {{clue}}
+      </section>
+
+      </section>
+    </section>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="./index.js"></script>
   </body>
