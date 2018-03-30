@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Angularjs Webpack</title>
-    <link rel="stylesheet" href="/screen.css">
+    <link rel="stylesheet" href="./screen.css">
   </head>
-  <body ng-app="main" ng-controller="mainController">
-    {{title | addOne}}
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <body ng-app="mainAngularApp" ng-controller="mainAppController">
+    {{greeting}}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="./index.js"></script>
   </body>
 </html>
