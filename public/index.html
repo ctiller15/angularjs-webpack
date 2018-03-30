@@ -8,10 +8,11 @@
   </head>
   <body ng-app="mainAngularApp" ng-controller="mainAppController">
     <!-- {{greeting}} -->
-    <section ng-repeat="category in categoryData">
+    <section ng-class="'category'" ng-repeat="category in categoryData">
       <h2>{{category.title}}</h2>
-      <section ng-class="question" ng-repeat="clue in category.clues">
+      <section ng-class="'question'" ng-repeat="clue in category.clues" ng-if="$index < 5">
         {{clue}}
+        <!-- {{$index < 5}} -->
       </section>
 
       </section>
