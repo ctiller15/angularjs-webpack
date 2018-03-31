@@ -10,9 +10,13 @@
     <!-- {{greeting}} -->
     <section ng-class="'category'" ng-repeat="category in categoryData">
       <h2>{{category.title}}</h2>
-      <section ng-class="'question'" ng-repeat="clue in category.clues" ng-if="$index < 5">
-        {{clue}}
+      <section ng-class="'question'" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question)">
+        <section>
+          {{($index + 1) * 200}}
+        </section><!-- {{clue.value}} -->
         <!-- {{$index < 5}} -->
+        <!-- Cannot use "clue.value", as that is inconsistent! -->
+
       </section>
 
       </section>

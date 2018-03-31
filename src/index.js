@@ -16,6 +16,9 @@ angular
         $scope.greeting = "Hello Angular!";
         $scope.categoryIDs = [];
         $scope.categoryData = [];
+        $scope.showQuestion = (question) => {
+            console.log(question);
+        }
 
         for(let i = 0; i < 5; i++) {
             $http({
