@@ -10,10 +10,33 @@ const randomizeCategory = () => {
     return(Math.floor(Math.random() * max));
 }
 
+class Game {
+    constructor(playerCount) {
+        this.players = [];
+        this.createPlayers = () => {
+            for(let i = 0; i < playerCount; i++) {
+                this.players.push(new Player());
+            }
+        }
+        this.createPlayers();
+    }
+}
+
+class Player {
+    constructor() {
+        this.score = 0;
+        this.updateScore = (points) => {
+            this.score += points;
+        }
+    }
+}
+
 angular
     .module("mainAngularApp", [])
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
         $scope.greeting = "Hello Angular!";
+        $scope.games = [];
+        $scope.playerCount = 1;
         $scope.categoryIDs = [];
         $scope.categoryData = [];
         $scope.showQuestion = (question) => {
@@ -29,6 +52,12 @@ angular
                 $scope.categoryData.push(response.data);
             });
         }
+
+        // creating the game with the individual players.
+        $scope.games[0] = new Game($scope.playerCount);
+        console.log($scope.games[0]);
+        
+
 
         // for(let i = 0; i < 5; i++) {
         //     $http({
