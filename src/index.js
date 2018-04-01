@@ -4,6 +4,8 @@
 //     $scope.title = "Hello World!"
 // })
 
+// TODO: Clean up code a bit. Refactor!
+
 const max = 18418;
 
 const randomizeCategory = () => {
@@ -42,10 +44,18 @@ class Board {
     }
 }
 
+// class BoardQuestion {
+//     constructor() {
+//         this.question = "";
+//         this.asked = false;
+//     }
+// }
+
 angular
     .module("mainAngularApp", [])
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
         let currentAnswer = "";
+        let currentAskedQuestion;
         $scope.greeting = "Hello Angular!";
         $scope.games = [];
         $scope.playerCount = 1;
@@ -54,7 +64,7 @@ angular
         $scope.currentScore = 0;
         $scope.categoryIDs = [];
         $scope.categoryData = [];
-        $scope.showQuestion = (question, answer, score) => {
+        $scope.showQuestion = (question, answer, score, parentID, indexID) => {
             console.log(question);
             console.log($scope.games);
             $scope.games[$scope.currentGame].board.display = false;
@@ -62,6 +72,9 @@ angular
             $scope.currentScore = score;
             currentAnswer = answer;
             console.log(currentAnswer);
+            console.log(parentID, indexID);
+            currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
+            console.log(currentAskedQuestion);
         }
 
         $scope.playerAnswer = "";
@@ -77,7 +90,9 @@ angular
             $scope.games[$scope.currentGame].board.display = true;
             currentAnswer = "";
             $scope.currentQuestion = "";
-            $scope.playerAnswer = "";            
+            $scope.playerAnswer = "";   
+            currentAskedQuestion.asked = true;
+            // $scope.games[$scope.currentGame].board.boardData[]         
         }
 
         // creating the game with the individual players.
@@ -89,6 +104,10 @@ angular
                 url: `http://jservice.io/api/category?&id=${randomizeCategory()}`
             }).then((response) => {
                 console.log(response.data);
+                // response.data.asked = false;
+                response.data.clues.forEach((question) => {
+                    question.asked = false;
+                });
                 $scope.categoryData.push(response.data);
             }).then(() => {
                 $scope.games[$scope.currentGame].createBoard($scope.categoryData);
