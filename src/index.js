@@ -44,40 +44,57 @@ class Board {
     }
 }
 
-// class BoardQuestion {
-//     constructor() {
-//         this.question = "";
-//         this.asked = false;
-//     }
-// }
-
 angular
     .module("mainAngularApp", [])
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
         let currentAnswer = "";
         let currentAskedQuestion;
-        $scope.greeting = "Hello Angular!";
+
+        const getQuestionData = () => {
+            for(let i = 0; i < 5; i++) {
+                $http({
+                    method: "GET",
+                    url: `http://jservice.io/api/category?&id=${randomizeCategory()}`
+                }).then((response) => {
+                    console.log(response.data);
+                    response.data.clues.forEach((question) => {
+                        question.asked = false;
+                    });
+                    $scope.categoryData.push(response.data);
+                }).then(() => {
+                    $scope.games[$scope.currentGame].createBoard($scope.categoryData);
+                    console.log($scope.games);
+                });
+            }
+        }
+
+        const askQuestion = (question, answer, score, parentID, indexID) => {
+            $scope.games[$scope.currentGame].board.display = false;
+            $scope.currentQuestion = question;
+            $scope.currentScore = score;
+            currentAnswer = answer;
+            currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
+        }
+
+        const resetQuestion = () => {
+            $scope.games[$scope.currentGame].board.display = true;
+            currentAnswer = "";
+            $scope.currentQuestion = "";
+            $scope.playerAnswer = "";   
+            currentAskedQuestion.asked = true;  
+        }
+
         $scope.games = [];
         $scope.playerCount = 1;
         $scope.currentGame = 0;
         $scope.currentQuestion = "";
         $scope.currentScore = 0;
-        $scope.categoryIDs = [];
         $scope.categoryData = [];
+
         $scope.showQuestion = (question, answer, score, parentID, indexID) => {
-            console.log($scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked);
             let questionAsked = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked;
             if(!questionAsked) {
-                console.log(question);
-                console.log($scope.games);
-                $scope.games[$scope.currentGame].board.display = false;
-                $scope.currentQuestion = question;
-                $scope.currentScore = score;
-                currentAnswer = answer;
-                console.log(currentAnswer);
-                console.log(parentID, indexID);
-                currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
-                console.log(currentAskedQuestion);
+                askQuestion(question, answer, score, parentID, indexID);
             } else {
                 console.log("Question has been asked already!");
             }
@@ -87,38 +104,19 @@ angular
         $scope.playerAnswer = "";
 
         $scope.submitPlayerAnswer = () => {
-            console.log($scope.playerAnswer, currentAnswer);
+            // If their answer is correct...
             if($scope.playerAnswer == currentAnswer) {
                 console.log("Sweet! You got it!!!");
                 $scope.games[$scope.currentGame].players[0].score += $scope.currentScore;
                 console.log($scope.games);
             }
             // Now, reset the board.
-            $scope.games[$scope.currentGame].board.display = true;
-            currentAnswer = "";
-            $scope.currentQuestion = "";
-            $scope.playerAnswer = "";   
-            currentAskedQuestion.asked = true;
-            // $scope.games[$scope.currentGame].board.boardData[]         
+            resetQuestion();
         }
 
         // creating the game with the individual players.
         $scope.games[$scope.currentGame] = new Game($scope.playerCount);
 
-        for(let i = 0; i < 5; i++) {
-            $http({
-                method: "GET",
-                url: `http://jservice.io/api/category?&id=${randomizeCategory()}`
-            }).then((response) => {
-                console.log(response.data);
-                // response.data.asked = false;
-                response.data.clues.forEach((question) => {
-                    question.asked = false;
-                });
-                $scope.categoryData.push(response.data);
-            }).then(() => {
-                $scope.games[$scope.currentGame].createBoard($scope.categoryData);
-                console.log($scope.games);
-            });
-        }
+        getQuestionData();
+
     }]);

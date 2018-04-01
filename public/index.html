@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./screen.css">
   </head>
   <body ng-app="mainAngularApp" ng-controller="mainAppController">
-    <!-- {{greeting}} -->
+
     <section ng-class="'question-show'" ng-hide="games[0].board.display">
       <h2>{{currentQuestion}}</h2>
       <form>
@@ -16,20 +16,17 @@
       </form>
 
     </section>
+
     <section ng-class="'category'" ng-repeat="(catIndex, category) in games[0].board.boardData" ng-show="games[0].board.display">
       <h2>{{category.title}}</h2>
       <section ng-disabled="category.clues[$index].asked" ng-class="{question: true, questionAsked: category.clues[$index].asked}" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200, catIndex, $index)">
         <section>
           {{($index + 1) * 200}}
-        </section><!-- {{clue.value}} -->
-        <!-- {{$index < 5}} -->
-        <!-- Cannot use "clue.value", as that is inconsistent! -->
+        </section>
 
       </section>
 
-      </section>
     </section>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <!-- <script src="./index.js"></script> -->
   </body>
 </html>
