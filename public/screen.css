@@ -33,3 +33,7 @@ body {
   border: 2px solid blue;
 }
 
+.questionAsked {
+  background: orange;
+}
+

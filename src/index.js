@@ -65,16 +65,23 @@ angular
         $scope.categoryIDs = [];
         $scope.categoryData = [];
         $scope.showQuestion = (question, answer, score, parentID, indexID) => {
-            console.log(question);
-            console.log($scope.games);
-            $scope.games[$scope.currentGame].board.display = false;
-            $scope.currentQuestion = question;
-            $scope.currentScore = score;
-            currentAnswer = answer;
-            console.log(currentAnswer);
-            console.log(parentID, indexID);
-            currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
-            console.log(currentAskedQuestion);
+            console.log($scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked);
+            let questionAsked = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked;
+            if(!questionAsked) {
+                console.log(question);
+                console.log($scope.games);
+                $scope.games[$scope.currentGame].board.display = false;
+                $scope.currentQuestion = question;
+                $scope.currentScore = score;
+                currentAnswer = answer;
+                console.log(currentAnswer);
+                console.log(parentID, indexID);
+                currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
+                console.log(currentAskedQuestion);
+            } else {
+                console.log("Question has been asked already!");
+            }
+
         }
 
         $scope.playerAnswer = "";

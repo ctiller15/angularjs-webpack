@@ -18,7 +18,7 @@
     </section>
     <section ng-class="'category'" ng-repeat="(catIndex, category) in games[0].board.boardData" ng-show="games[0].board.display">
       <h2>{{category.title}}</h2>
-      <section ng-disabled="category.clues.asked" ng-class="'question'" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200, catIndex, $index)">
+      <section ng-disabled="category.clues[$index].asked" ng-class="{question: true, questionAsked: category.clues[$index].asked}" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200, catIndex, $index)">
         <section>
           {{($index + 1) * 200}}
         </section><!-- {{clue.value}} -->
