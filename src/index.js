@@ -45,6 +45,7 @@ class Board {
 angular
     .module("mainAngularApp", [])
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
+        let currentAnswer = "";
         $scope.greeting = "Hello Angular!";
         $scope.games = [];
         $scope.playerCount = 1;
@@ -52,11 +53,13 @@ angular
         $scope.currentQuestion = "";
         $scope.categoryIDs = [];
         $scope.categoryData = [];
-        $scope.showQuestion = (question) => {
+        $scope.showQuestion = (question, answer) => {
             console.log(question);
             console.log($scope.games);
             $scope.games[$scope.currentGame].board.display = false;
             $scope.currentQuestion = question;
+            currentAnswer = answer;
+            console.log(currentAnswer);
         }
 
         // creating the game with the individual players.
