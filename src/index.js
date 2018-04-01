@@ -19,6 +19,10 @@ class Game {
             }
         }
         this.createPlayers();
+        this.board = new Board();
+        this.createBoard = (data) => {
+            this.board.boardData = data;
+        }
     }
 }
 
@@ -31,17 +35,31 @@ class Player {
     }
 }
 
+class Board {
+    constructor(data) {
+        this.display = true;
+        this.boardData = [];
+    }
+}
+
 angular
     .module("mainAngularApp", [])
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
         $scope.greeting = "Hello Angular!";
         $scope.games = [];
         $scope.playerCount = 1;
+        $scope.currentGame = 0;
         $scope.categoryIDs = [];
         $scope.categoryData = [];
         $scope.showQuestion = (question) => {
             console.log(question);
+            console.log($scope.games);
+            // $scope.games[$scope.currentGame].board.display = false;
         }
+
+        // creating the game with the individual players.
+        $scope.games[$scope.currentGame] = new Game($scope.playerCount);
+        console.log($scope.games[$scope.currentGame]);
 
         for(let i = 0; i < 5; i++) {
             $http({
@@ -50,12 +68,13 @@ angular
             }).then((response) => {
                 console.log(response.data);
                 $scope.categoryData.push(response.data);
+                // $scope.games[$scope.currentGame].board.push(response.data);
+                // console.log($scope.games[$scope.currentGame].board);
+            }).then(() => {
+                $scope.games[$scope.currentGame].createBoard($scope.categoryData);
+                console.log($scope.games);
             });
         }
-
-        // creating the game with the individual players.
-        $scope.games[0] = new Game($scope.playerCount);
-        console.log($scope.games[0]);
         
 
 
