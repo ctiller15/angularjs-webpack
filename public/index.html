@@ -10,11 +10,15 @@
     <!-- {{greeting}} -->
     <section ng-class="'question-show'" ng-hide="games[0].board.display">
       <h2>{{currentQuestion}}</h2>
-      <input type="text">
+      <form>
+        <input type="text" ng-model="playerAnswer">
+        <button type="button" ng-click="submitPlayerAnswer()">Submit answer!</button>
+      </form>
+
     </section>
     <section ng-class="'category'" ng-repeat="category in games[0].board.boardData" ng-show="games[0].board.display">
       <h2>{{category.title}}</h2>
-      <section ng-class="'question'" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer)">
+      <section ng-class="'question'" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200)">
         <section>
           {{($index + 1) * 200}}
         </section><!-- {{clue.value}} -->

@@ -51,15 +51,33 @@ angular
         $scope.playerCount = 1;
         $scope.currentGame = 0;
         $scope.currentQuestion = "";
+        $scope.currentScore = 0;
         $scope.categoryIDs = [];
         $scope.categoryData = [];
-        $scope.showQuestion = (question, answer) => {
+        $scope.showQuestion = (question, answer, score) => {
             console.log(question);
             console.log($scope.games);
             $scope.games[$scope.currentGame].board.display = false;
             $scope.currentQuestion = question;
+            $scope.currentScore = score;
             currentAnswer = answer;
             console.log(currentAnswer);
+        }
+
+        $scope.playerAnswer = "";
+
+        $scope.submitPlayerAnswer = () => {
+            console.log($scope.playerAnswer, currentAnswer);
+            if($scope.playerAnswer == currentAnswer) {
+                console.log("Sweet! You got it!!!");
+                $scope.games[$scope.currentGame].players[0].score += $scope.currentScore;
+                console.log($scope.games);
+            }
+            // Now, reset the board.
+            $scope.games[$scope.currentGame].board.display = true;
+            currentAnswer = "";
+            $scope.currentQuestion = "";
+            $scope.playerAnswer = "";            
         }
 
         // creating the game with the individual players.
