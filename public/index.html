@@ -8,6 +8,9 @@
   </head>
   <body ng-app="mainAngularApp" ng-controller="mainAppController">
     <!-- {{greeting}} -->
+    <section ng-class="'question-show'" ng-hide="games[0].board.display">
+      {{currentQuestion}}
+    </section>
     <section ng-class="'category'" ng-repeat="category in games[0].board.boardData" ng-show="games[0].board.display">
       <h2>{{category.title}}</h2>
       <section ng-class="'question'" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question)">

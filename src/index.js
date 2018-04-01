@@ -49,17 +49,18 @@ angular
         $scope.games = [];
         $scope.playerCount = 1;
         $scope.currentGame = 0;
+        $scope.currentQuestion = "";
         $scope.categoryIDs = [];
         $scope.categoryData = [];
         $scope.showQuestion = (question) => {
             console.log(question);
             console.log($scope.games);
-            // $scope.games[$scope.currentGame].board.display = false;
+            $scope.games[$scope.currentGame].board.display = false;
+            $scope.currentQuestion = question;
         }
 
         // creating the game with the individual players.
         $scope.games[$scope.currentGame] = new Game($scope.playerCount);
-        console.log($scope.games[$scope.currentGame]);
 
         for(let i = 0; i < 5; i++) {
             $http({
@@ -68,35 +69,9 @@ angular
             }).then((response) => {
                 console.log(response.data);
                 $scope.categoryData.push(response.data);
-                // $scope.games[$scope.currentGame].board.push(response.data);
-                // console.log($scope.games[$scope.currentGame].board);
             }).then(() => {
                 $scope.games[$scope.currentGame].createBoard($scope.categoryData);
                 console.log($scope.games);
             });
         }
-        
-
-
-        // for(let i = 0; i < 5; i++) {
-        //     $http({
-        //         method: "GET",
-        //         url: "http://jservice.io/api/random?"
-        //     }).then(response => {
-        //         // console.log(response.data);
-        //         $scope.categoryIDs.push(response.data[0].category_id);
-        //         return response.data[0].category_id;
-        //     }).then((cat_id) => {
-        //         console.log(cat_id);
-        //         $http({
-        //             method: "GET",
-        //             url: `http://jservice.io/api/category?&id=${cat_id}`
-        //         }).then(response => {
-        //             console.log(response.data);
-        //             $scope.categoryData.push(response.data);
-        //         })
-        //     });
-        // }
-
-
     }]);
