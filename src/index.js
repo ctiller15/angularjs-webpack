@@ -21,6 +21,24 @@ class Game {
             }
         }
         this.createPlayers();
+        this.currentTurn = 0;
+        this.changeTurn = () => {
+            this.currentTurn += 1;
+            // If we go higher than the current number of players, switch back to the first.
+            if(this.currentTurn >= this.players.length) {
+                this.currentTurn = 0;
+            }
+            // Change the individual statuses.
+            for(let i = 0; i < this.players.length; i++) {
+                if(i !== this.currentTurn) {
+                    this.players[i].isCurrentTurn = false;
+                } else {
+                    this.players[i].isCurrentTurn = true;
+                }
+            }
+            console.log(this.currentTurn);
+
+        }
         this.board = new Board();
         this.createBoard = (data) => {
             this.board.boardData = data;
@@ -53,6 +71,7 @@ class Player {
         this.updateScore = (points) => {
             this.score += points;
         }
+        this.isCurrentTurn = false;
     }
 }
 
@@ -121,7 +140,7 @@ angular
         }
 
         $scope.games = [];
-        $scope.playerCount = 1;
+        $scope.playerCount = 3;
         $scope.currentGame = 0;
         $scope.currentQuestion = "";
         $scope.currentScore = 0;
@@ -141,10 +160,14 @@ angular
 
         $scope.submitPlayerAnswer = () => {
             // If their answer is correct...
+            let currentTurn = $scope.games[$scope.currentGame].currentTurn;
             if($scope.playerAnswer == currentAnswer) {
                 console.log("Sweet! You got it!!!");
-                $scope.games[$scope.currentGame].players[0].score += $scope.currentScore;
+                $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore;
                 console.log($scope.games);
+            } else {
+                console.log("BZZT! WRONG!!!");
+                $scope.games[$scope.currentGame].changeTurn();
             }
             // Now, reset the board.
             resetQuestion();
