@@ -87,6 +87,7 @@ angular
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
         let currentAnswer = "";
         let currentAskedQuestion;
+        let count = 0;
 
         const getQuestionData = () => {
             for(let i = 0; i < 5; i++) {
@@ -159,18 +160,26 @@ angular
         $scope.playerAnswer = "";
 
         $scope.submitPlayerAnswer = () => {
+            let solved = false;
             // If their answer is correct...
             let currentTurn = $scope.games[$scope.currentGame].currentTurn;
             if($scope.playerAnswer == currentAnswer) {
                 console.log("Sweet! You got it!!!");
+                solved = true;
                 $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore;
                 console.log($scope.games);
             } else {
                 console.log("BZZT! WRONG!!!");
+                count++;
+                console.log(count);
                 $scope.games[$scope.currentGame].changeTurn();
             }
             // Now, reset the board.
-            resetQuestion();
+            if(solved || count >= $scope.games[$scope.currentGame].players.length) {
+                count = 0;
+                resetQuestion();
+            }
+
         }
 
         // creating the game with the individual players.
