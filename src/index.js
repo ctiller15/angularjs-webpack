@@ -183,11 +183,20 @@ angular
             if($scope.playerAnswer == currentAnswer) {
                 console.log("Sweet! You got it!!!");
                 solved = true;
-                $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore;
+                if($scope.games[currentGame].currentRound === 2) {
+                    $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore * 2;
+                } else {
+                    $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore;
+                }
+
                 console.log($scope.games);
             } else {
                 console.log("BZZT! WRONG!!!");
-                $scope.games[$scope.currentGame].players[currentTurn].score -= $scope.currentScore;
+                if($scope.games[$scope.currentGame].currentRound === 2) {
+                    $scope.games[$scope.currentGame].players[currentTurn].score -= $scope.currentScore * 2;
+                } else {
+                    $scope.games[$scope.currentGame].players[currentTurn].score -= $scope.currentScore;
+                }
                 count++;
                 console.log(count);
                 $scope.games[$scope.currentGame].changeTurn();
