@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "deploy": "surge ./public --domain angularjs-webpack.markt.surge.sh",
+    "deploy": "surge ./public --domain jeopardy-project.ctiller.surge.sh",
     "start": "webpack-dev-server --history-api-fallback --inline --progress  --mode development"
   },
   "dependencies": {
