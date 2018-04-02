@@ -10,6 +10,8 @@
 
     <section ng-class="'game-board'" ng-hide="games[currentGame].gameOver">
 
+      <h1>round: {{games[currentGame].currentRound}}</h1>
+
       <section ng-class="'question-show'" ng-hide="games[currentGame].board.display">
         <h2>{{currentQuestion}}</h2>
         <form>

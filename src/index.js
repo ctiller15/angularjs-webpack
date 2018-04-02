@@ -6,85 +6,102 @@
 
 // TODO: Clean up code a bit. Refactor!
 
-const max = 18418;
 
-const randomizeCategory = () => {
-    return(Math.floor(Math.random() * max));
-}
-
-class Game {
-    constructor(playerCount) {
-        this.players = [];
-        this.createPlayers = () => {
-            for(let i = 0; i < playerCount; i++) {
-                this.players.push(new Player());
-            }
-        }
-        this.createPlayers();
-        this.currentTurn = 0;
-        this.changeTurn = () => {
-            this.currentTurn += 1;
-            // If we go higher than the current number of players, switch back to the first.
-            if(this.currentTurn >= this.players.length) {
-                this.currentTurn = 0;
-            }
-            // Change the individual statuses.
-            for(let i = 0; i < this.players.length; i++) {
-                if(i !== this.currentTurn) {
-                    this.players[i].isCurrentTurn = false;
-                } else {
-                    this.players[i].isCurrentTurn = true;
-                }
-            }
-            console.log(this.currentTurn);
-
-        }
-        this.board = new Board();
-        this.createBoard = (data) => {
-            this.board.boardData = data;
-        }
-        this.gameOver = false;
-        this.checkGameStatus = () => {
-            console.log(this.board.boardData);
-            let boardLen = this.board.boardData.length;
-            for(let i = 0; i < boardLen; i++) {
-                for(let j = 0; j < 5; j++) {
-                    console.log(this.board.boardData[i].clues[j].asked);
-                    // If we hit at least ONE false, we're fine.
-                    if(this.board.boardData[i].clues[j].asked === false){
-                        console.log("We're fine! Bail out!");
-                        return;
-                    }
-                }
-            }
-            // If we make it to this point, not a single false was found.
-            console.log("Game over boys! We're going home!");
-            this.gameOver = true;
-            // Run a function to end the game here.
-        }
-    }
-}
-
-class Player {
-    constructor() {
-        this.score = 0;
-        this.updateScore = (points) => {
-            this.score += points;
-        }
-        this.isCurrentTurn = false;
-    }
-}
-
-class Board {
-    constructor(data) {
-        this.display = true;
-        this.boardData = [];
-    }
-}
 
 angular
     .module("mainAngularApp", [])
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
+
+        const max = 18418;
+
+        const randomizeCategory = () => {
+            return(Math.floor(Math.random() * max));
+        }
+        
+        class Game {
+            constructor(playerCount) {
+                this.players = [];
+                this.createPlayers = () => {
+                    for(let i = 0; i < playerCount; i++) {
+                        this.players.push(new Player());
+                    }
+                }
+                this.createPlayers();
+                this.currentTurn = 0;
+                this.changeTurn = () => {
+                    this.currentTurn += 1;
+                    // If we go higher than the current number of players, switch back to the first.
+                    if(this.currentTurn >= this.players.length) {
+                        this.currentTurn = 0;
+                    }
+                    // Change the individual statuses.
+                    for(let i = 0; i < this.players.length; i++) {
+                        if(i !== this.currentTurn) {
+                            this.players[i].isCurrentTurn = false;
+                        } else {
+                            this.players[i].isCurrentTurn = true;
+                        }
+                    }
+                    console.log(this.currentTurn);
+        
+                }
+                this.board = new Board();
+                this.createBoard = (data) => {
+                    this.board.boardData = data;
+                }
+                this.gameOver = false;
+                this.checkGameStatus = () => {
+                    console.log(this.board.boardData);
+                    let boardLen = this.board.boardData.length;
+                    for(let i = 0; i < boardLen; i++) {
+                        for(let j = 0; j < 5; j++) {
+                            console.log(this.board.boardData[i].clues[j].asked);
+                            // If we hit at least ONE false, we're fine.
+                            if(this.board.boardData[i].clues[j].asked === false){
+                                console.log("We're fine! Bail out!");
+                                return;
+                            }
+                        }
+                    }
+                    // If we make it to this point, not a single false was found.
+                    console.log("Game over boys! We're going home!");
+                    this.changeRound();
+        
+                    // Run a function to end the game here.
+                }
+                // Tells us the round of the current game. 2 is double jeopardy, 3 is final jeopardy.
+                this.currentRound = 1;
+                this.changeRound = () => {
+                    this.currentRound++;
+                    // If we've had more than 3 rounds, the game ends.
+                    if(this.currentRound > 3) {
+                        this.gameOver = true;
+                    } else {
+                        // Otherwise, reset the board for the next round.
+                        $scope.categoryData = [];
+                        getQuestionData();
+                    }
+                }
+            }
+        }
+        
+        class Player {
+            constructor() {
+                this.score = 0;
+                this.updateScore = (points) => {
+                    this.score += points;
+                }
+                this.isCurrentTurn = false;
+            }
+        }
+        
+        class Board {
+            constructor(data) {
+                this.display = true;
+                this.boardData = [];
+            }
+        }        
+
         let currentAnswer = "";
         let currentAskedQuestion;
         let count = 0;
@@ -170,6 +187,7 @@ angular
                 console.log($scope.games);
             } else {
                 console.log("BZZT! WRONG!!!");
+                $scope.games[$scope.currentGame].players[currentTurn].score -= $scope.currentScore;
                 count++;
                 console.log(count);
                 $scope.games[$scope.currentGame].changeTurn();
