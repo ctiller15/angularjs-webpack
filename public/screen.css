@@ -7,12 +7,14 @@ body {
   min-height: 100%;
   font: 16px / 1 sans-serif;
   display: flex;
+  color: #FFFFFF;
 }
 
 .game-board {
   display: flex;
   justify-content: space-around;
   flex-basis: 100%;
+  background: #0236CA;
 }
 
 .category {
@@ -24,8 +26,17 @@ body {
   text-align: center;
 }
 
+/* Hah! CSS voodoo! */
+.category:not(:last-child) {
+  border-right: 2px solid black;
+}
+
+.category h2{
+  flex-basis: 50px;
+}
+
 .question {
-  border: 3px solid green;
+  /* border: 3px solid green; */
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -35,10 +46,19 @@ body {
 }
 
 .question > * {
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
+  color: #DEB81A;
+  text-decoration: underline;
+  font-size: 3em;
 }
 
-.questionAsked {
+.category .question{
+  border-top: 2px solid black;
+  cursor: pointer;
+}
+
+.category .question.questionAsked {
   background: orange;
+  cursor: default;
 }
 
