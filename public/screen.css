@@ -7,6 +7,7 @@ body {
   min-height: 100%;
   font: 16px / 1 sans-serif;
   display: flex;
+  flex-direction: column;
   color: #FFFFFF;
 }
 
@@ -15,6 +16,7 @@ body {
   justify-content: space-around;
   flex-basis: 100%;
   background: #0236CA;
+  flex-grow: 1;
 }
 
 .category {
@@ -60,5 +62,9 @@ body {
 .category .question.questionAsked {
   background: orange;
   cursor: default;
+}
+
+.player-section {
+  color: black;
 }
 

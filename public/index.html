@@ -32,6 +32,14 @@
 
     </section>
 
+    <section ng-class="'player-section'">
+      <!-- <h3>Players all go here!!!</h3> -->
+      <section ng-class="'player'" ng-repeat="player in games[currentGame].players">
+        <h2>player {{$index + 1}}</h2>
+        <h3>Score: {{player.score}}</h3>
+      </section>
+    </section>
+
     <section ng-class="'reset-screen'" ng-show="games[currentGame].gameOver">
       <form>
         <button type="button" ng-click="resetGame()">Reset game?</button>

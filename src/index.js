@@ -94,6 +94,7 @@ angular
             $scope.currentScore = score;
             currentAnswer = answer;
             currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
+            console.log(currentAnswer);
         }
 
         const resetQuestion = () => {
