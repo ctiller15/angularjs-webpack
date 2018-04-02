@@ -8,25 +8,37 @@
   </head>
   <body ng-app="mainAngularApp" ng-controller="mainAppController">
 
-    <section ng-class="'question-show'" ng-hide="games[0].board.display">
-      <h2>{{currentQuestion}}</h2>
-      <form>
-        <input type="text" ng-model="playerAnswer">
-        <button type="button" ng-click="submitPlayerAnswer()">Submit answer!</button>
-      </form>
+    <section ng-class="'game-board'" ng-hide="games[currentGame].gameOver">
 
-    </section>
-
-    <section ng-class="'category'" ng-repeat="(catIndex, category) in games[0].board.boardData" ng-show="games[0].board.display">
-      <h2>{{category.title}}</h2>
-      <section ng-disabled="category.clues[$index].asked" ng-class="{question: true, questionAsked: category.clues[$index].asked}" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200, catIndex, $index)">
-        <section>
-          {{($index + 1) * 200}}
+      <section ng-class="'question-show'" ng-hide="games[currentGame].board.display">
+        <h2>{{currentQuestion}}</h2>
+        <form>
+          <input type="text" ng-model="playerAnswer">
+          <button type="button" ng-click="submitPlayerAnswer()">Submit answer!</button>
+        </form>
+  
+      </section>
+  
+      <section ng-class="'category'" ng-repeat="(catIndex, category) in games[currentGame].board.boardData" ng-show="games[currentGame].board.display">
+        <h2>{{category.title}}</h2>
+        <section ng-disabled="category.clues[$index].asked" ng-class="{question: true, questionAsked: category.clues[$index].asked}" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200, catIndex, $index)">
+          <section>
+            {{($index + 1) * 200}}
+          </section>
+  
         </section>
-
+  
       </section>
 
     </section>
+
+    <section ng-class="'reset-screen'" ng-show="games[currentGame].gameOver">
+      <form>
+        <button type="button" ng-click="resetGame()">Reset game?</button>
+      </form>
+    </section>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   </body>
 </html>

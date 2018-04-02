@@ -105,6 +105,20 @@ angular
             $scope.games[$scope.currentGame].checkGameStatus();
         }
 
+        const createGame = () => {
+            $scope.games[$scope.currentGame] = new Game($scope.playerCount);
+
+            getQuestionData();
+        }
+
+        $scope.resetGame = () => {
+            $scope.currentGame += 1;
+            $scope.categoryData = [];
+            console.log($scope.currentGame);
+            createGame();
+            console.log($scope.games);
+        }
+
         $scope.games = [];
         $scope.playerCount = 1;
         $scope.currentGame = 0;
@@ -136,8 +150,9 @@ angular
         }
 
         // creating the game with the individual players.
-        $scope.games[$scope.currentGame] = new Game($scope.playerCount);
 
-        getQuestionData();
+
+        createGame();
+
 
     }]);
