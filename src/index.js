@@ -25,6 +25,25 @@ class Game {
         this.createBoard = (data) => {
             this.board.boardData = data;
         }
+        this.gameOver = false;
+        this.checkGameStatus = () => {
+            console.log(this.board.boardData);
+            let boardLen = this.board.boardData.length;
+            for(let i = 0; i < boardLen; i++) {
+                for(let j = 0; j < 5; j++) {
+                    console.log(this.board.boardData[i].clues[j].asked);
+                    // If we hit at least ONE false, we're fine.
+                    if(this.board.boardData[i].clues[j].asked === false){
+                        console.log("We're fine! Bail out!");
+                        return;
+                    }
+                }
+            }
+            // If we make it to this point, not a single false was found.
+            console.log("Game over boys! We're going home!");
+            this.gameOver = true;
+            // Run a function to end the game here.
+        }
     }
 }
 
@@ -64,6 +83,7 @@ angular
                 }).then(() => {
                     $scope.games[$scope.currentGame].createBoard($scope.categoryData);
                     console.log($scope.games);
+                    $scope.games[$scope.currentGame].checkGameStatus();
                 });
             }
         }
@@ -81,7 +101,8 @@ angular
             currentAnswer = "";
             $scope.currentQuestion = "";
             $scope.playerAnswer = "";   
-            currentAskedQuestion.asked = true;  
+            currentAskedQuestion.asked = true;
+            $scope.games[$scope.currentGame].checkGameStatus();
         }
 
         $scope.games = [];
