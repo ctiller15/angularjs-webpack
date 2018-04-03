@@ -66,5 +66,12 @@ body {
 
 .player-section {
   color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.active {
+  color: red;
 }
 

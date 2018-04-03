@@ -36,7 +36,7 @@
 
     <section ng-class="'player-section'">
       <!-- <h3>Players all go here!!!</h3> -->
-      <section ng-class="'player'" ng-repeat="player in games[currentGame].players">
+      <section ng-class="{player: true, active: games[currentGame].currentTurn == $index}" ng-repeat="player in games[currentGame].players">
         <h2>player {{$index + 1}}</h2>
         <h3>Score: {{player.score}}</h3>
       </section>

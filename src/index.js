@@ -17,6 +17,10 @@ angular
         const randomizeCategory = () => {
             return(Math.floor(Math.random() * max));
         }
+
+        const createDailyDoubles = () => {
+            
+        };
         
         class Game {
             constructor(playerCount) {
