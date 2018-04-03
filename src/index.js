@@ -6,19 +6,82 @@
 
 // TODO: Clean up code a bit. Refactor!
 
-
-
 angular
     .module("mainAngularApp", [])
     .controller("mainAppController", ["$scope", "$http", ($scope, $http) => {
 
+        $scope.games = [];
+        $scope.playerCount = 3;
+        $scope.currentGame = 0;
+        $scope.currentQuestion = "";
+        $scope.currentScore = 0;
+        $scope.categoryData = [];
+        $scope.playerAnswer = "";
+
         const max = 18418;
+
+        let currentAnswer = "";
+        let currentAskedQuestion;
+        let count = 0;
+        let activeDailyDouble = false;
+
+        $scope.resetGame = () => {
+            $scope.currentGame += 1;
+            $scope.categoryData = [];
+            createGame();
+        }
+
+        $scope.showQuestion = (question, answer, score, parentID, indexID, dailyDouble) => {
+            let questionAsked = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked;
+            if(dailyDouble) {
+                activeDailyDouble = true;
+                console.log("Daily double is active!");
+            }
+            if(!questionAsked) {
+                askQuestion(question, answer, score, parentID, indexID);
+            } else {
+                console.log("Question has been asked already!");
+            }
+        }
+
+        $scope.submitPlayerAnswer = () => {
+            let solved = false;
+            let round = $scope.games[$scope.currentGame].currentRound; 
+            let currentTurn = $scope.games[$scope.currentGame].currentTurn;
+            let player = $scope.games[$scope.currentGame].players[currentTurn];
+            // If their answer is correct...
+
+            if($scope.playerAnswer == currentAnswer) {
+                console.log("Sweet! You got it!!!");
+                solved = true;
+                updatePlayerScore(round, player, "pos");
+            } else {
+                console.log("BZZT! WRONG!!!");
+                updatePlayerScore(round, player, "neg");                
+                count++;
+                $scope.games[$scope.currentGame].changeTurn();
+            }
+            // Now, reset the board.
+            if(solved || count >= $scope.games[$scope.currentGame].players.length) {
+                count = 0;
+                resetQuestion();
+            }
+        }
 
         const randomizeCategory = () => {
             return(Math.floor(Math.random() * max));
         }
 
-        function shuffleArray(arr) { // Shuffles an array, credit given to https://stackoverflow.com/users/310500/laurens-holst
+        const updatePlayerScore = (round, playerObj, sign) => {
+            let questionScore = sign === "pos" ? $scope.currentScore : -$scope.currentScore;
+            if(round === 2) {
+                playerObj.score += questionScore * 2;
+            } else {
+                playerObj.score += questionScore;
+            }
+        }
+
+        const shuffleArray = (arr) => { // Shuffles an array, credit given to https://stackoverflow.com/users/310500/laurens-holst
             let randArr = arr.slice();
             for (let i = arr.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
@@ -33,7 +96,6 @@ angular
             // Shuffle array first. (durstenfield shuffle)
             console.log(`We've shuffled now!!!`);
             let newArr = shuffleArray(arr);
-            console.log(newArr);
             // Then pick a few values off of array.
             let returnedArr = newArr.slice(0,3);
             // Then return array.
@@ -50,14 +112,61 @@ angular
                     tempArr.push($scope.categoryData[i].clues[j]);
                 }
             }
-            console.log(tempArr);
             let dailyDoubleQuestions = pickRandom(tempArr);
             for(let i = 0; i < dailyDoubleQuestions.length; i++) {
                 dailyDoubleQuestions[i].dailyDouble = true;
             }
-            console.log(dailyDoubleQuestions);
-            console.log(tempArr);
         };
+
+        const getQuestionData = () => {
+            let temp = {};
+            temp.val = 0;
+            for(let i = 0; i < 5; i++) {
+
+                $http({
+                    method: "GET",
+                    url: `http://jservice.io/api/category?&id=${randomizeCategory()}`
+                }).then((response) => {
+                    response.data.clues.forEach((question) => {
+                        question.asked = false;
+                    });
+                    $scope.categoryData.push(response.data);
+                }).then(() => {
+                    temp.val++;
+                    // if we're on the end of the loop, then we want to create the board and start the game.
+                    if(temp.val === 5) {
+                        $scope.games[$scope.currentGame].createBoard($scope.categoryData);
+                        console.log($scope.games);
+                        $scope.games[$scope.currentGame].checkGameStatus();
+                    }
+
+                });
+            }
+        }
+
+        const askQuestion = (question, answer, score, parentID, indexID) => {
+            $scope.games[$scope.currentGame].board.display = false;
+            $scope.currentQuestion = question;
+            $scope.currentScore = score;
+            currentAnswer = answer;
+            currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
+            console.log(currentAnswer);
+        }
+
+        const resetQuestion = () => {
+            $scope.games[$scope.currentGame].board.display = true;
+            currentAnswer = "";
+            activeDailyDouble = false;
+            $scope.currentQuestion = "";
+            $scope.playerAnswer = "";   
+            currentAskedQuestion.asked = true;
+            $scope.games[$scope.currentGame].checkGameStatus();
+        }
+
+        const createGame = () => {
+            $scope.games[$scope.currentGame] = new Game($scope.playerCount);
+            getQuestionData();
+        }
         
         class Game {
             constructor(playerCount) {
@@ -97,16 +206,14 @@ angular
                     let boardLen = this.board.boardData.length;
                     for(let i = 0; i < boardLen; i++) {
                         for(let j = 0; j < 5; j++) {
-                            console.log(this.board.boardData[i].clues[j].asked);
                             // If we hit at least ONE false, we're fine.
                             if(this.board.boardData[i].clues[j].asked === false){
-                                console.log("We're fine! Bail out!");
                                 return;
                             }
                         }
                     }
                     // If we make it to this point, not a single false was found.
-                    console.log("Game over boys! We're going home!");
+                    // console.log("Game over boys! We're going home!");
                     this.changeRound();
         
                     // Run a function to end the game here.
@@ -143,133 +250,8 @@ angular
                 this.boardData = [];
             }
         }        
-
-        let currentAnswer = "";
-        let currentAskedQuestion;
-        let count = 0;
-        let activeDailyDouble = false;
-        
-        const getQuestionData = () => {
-            let temp = {};
-            temp.val = 0;
-            for(let i = 0; i < 5; i++) {
-
-                $http({
-                    method: "GET",
-                    url: `http://jservice.io/api/category?&id=${randomizeCategory()}`
-                }).then((response) => {
-                    console.log(response.data);
-                    response.data.clues.forEach((question) => {
-                        question.asked = false;
-                    });
-                    $scope.categoryData.push(response.data);
-                }).then(() => {
-                    temp.val++;
-                    console.log(temp.val);
-                    // if we're on the end of the loop, then we want to create the board and start the game.
-                    if(temp.val === 5) {
-                        $scope.games[$scope.currentGame].createBoard($scope.categoryData);
-                        console.log($scope.games);
-                        $scope.games[$scope.currentGame].checkGameStatus();
-                    }
-
-                });
-            }
-        }
-
-        const askQuestion = (question, answer, score, parentID, indexID) => {
-            $scope.games[$scope.currentGame].board.display = false;
-            $scope.currentQuestion = question;
-            $scope.currentScore = score;
-            currentAnswer = answer;
-            currentAskedQuestion = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID];
-            console.log(currentAnswer);
-        }
-
-        const resetQuestion = () => {
-            $scope.games[$scope.currentGame].board.display = true;
-            currentAnswer = "";
-            activeDailyDouble = false;
-            $scope.currentQuestion = "";
-            $scope.playerAnswer = "";   
-            currentAskedQuestion.asked = true;
-            $scope.games[$scope.currentGame].checkGameStatus();
-        }
-
-        const createGame = () => {
-            $scope.games[$scope.currentGame] = new Game($scope.playerCount);
-
-            getQuestionData();
-        }
-
-        $scope.resetGame = () => {
-            $scope.currentGame += 1;
-            $scope.categoryData = [];
-            console.log($scope.currentGame);
-            createGame();
-            console.log($scope.games);
-        }
-
-        $scope.games = [];
-        $scope.playerCount = 3;
-        $scope.currentGame = 0;
-        $scope.currentQuestion = "";
-        $scope.currentScore = 0;
-        $scope.categoryData = [];
-
-        $scope.showQuestion = (question, answer, score, parentID, indexID, dailyDouble) => {
-            let questionAsked = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked;
-            if(dailyDouble) {
-                activeDailyDouble = true;
-                console.log("Daily double is active!");
-            }
-            if(!questionAsked) {
-                askQuestion(question, answer, score, parentID, indexID);
-            } else {
-                console.log("Question has been asked already!");
-            }
-
-        }
-
-        $scope.playerAnswer = "";
-
-        $scope.submitPlayerAnswer = () => {
-            let solved = false;
-            // If their answer is correct...
-            let currentTurn = $scope.games[$scope.currentGame].currentTurn;
-            if($scope.playerAnswer == currentAnswer) {
-                console.log("Sweet! You got it!!!");
-                solved = true;
-                if($scope.games[$scope.currentGame].currentRound === 2) {
-                    $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore * 2;
-                } else {
-                    $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore;
-                }
-
-                console.log($scope.games);
-            } else {
-                console.log("BZZT! WRONG!!!");
-                if($scope.games[$scope.currentGame].currentRound === 2) {
-                    $scope.games[$scope.currentGame].players[currentTurn].score -= $scope.currentScore * 2;
-                } else {
-                    $scope.games[$scope.currentGame].players[currentTurn].score -= $scope.currentScore;
-                }
-                count++;
-                console.log(count);
-                $scope.games[$scope.currentGame].changeTurn();
-            }
-            // Now, reset the board.
-            if(solved || count >= $scope.games[$scope.currentGame].players.length) {
-                count = 0;
-                resetQuestion();
-            }
-
-        }
-
         // creating the game with the individual players.
 
-
         createGame();
-
 
     }]);
