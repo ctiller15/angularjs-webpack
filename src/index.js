@@ -18,18 +18,32 @@ angular
             return(Math.floor(Math.random() * max));
         }
 
+        function shuffleArray(arr) { // Shuffles an array, credit given to https://stackoverflow.com/users/310500/laurens-holst
+            let randArr = arr.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                let temp = randArr[i];
+                randArr[i] = randArr[j];
+                randArr[j] = temp;
+            }
+            return randArr;
+        }
+
         const pickRandom = (arr) => {
             // Shuffle array first. (durstenfield shuffle)
+            console.log(`We've shuffled now!!!`);
+            let newArr = shuffleArray(arr);
+            console.log(newArr);
             // Then pick a few values off of array.
             // Then return array.
         }
 
         const createDailyDoubles = () => {
             let tempArr = [];
-            console.log($scope.categoryData);
+            // console.log($scope.categoryData);
             for(let i = 0; i < $scope.categoryData.length; i++) {
                 for(let j = 0; j < 5; j++) {
-                    console.log($scope.categoryData[i].clues[j]);
+                    // console.log($scope.categoryData[i].clues[j]);
                     $scope.categoryData[i].clues[j].dailyDouble = false;
                     tempArr.push($scope.categoryData[i].clues[j]);
                 }
