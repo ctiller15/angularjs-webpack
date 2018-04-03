@@ -147,8 +147,7 @@ angular
         let currentAnswer = "";
         let currentAskedQuestion;
         let count = 0;
-
-
+        let activeDailyDouble = false;
         
         const getQuestionData = () => {
             let temp = {};
@@ -190,6 +189,7 @@ angular
         const resetQuestion = () => {
             $scope.games[$scope.currentGame].board.display = true;
             currentAnswer = "";
+            activeDailyDouble = false;
             $scope.currentQuestion = "";
             $scope.playerAnswer = "";   
             currentAskedQuestion.asked = true;
@@ -217,8 +217,12 @@ angular
         $scope.currentScore = 0;
         $scope.categoryData = [];
 
-        $scope.showQuestion = (question, answer, score, parentID, indexID) => {
+        $scope.showQuestion = (question, answer, score, parentID, indexID, dailyDouble) => {
             let questionAsked = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked;
+            if(dailyDouble) {
+                activeDailyDouble = true;
+                console.log("Daily double is active!");
+            }
             if(!questionAsked) {
                 askQuestion(question, answer, score, parentID, indexID);
             } else {
@@ -236,7 +240,7 @@ angular
             if($scope.playerAnswer == currentAnswer) {
                 console.log("Sweet! You got it!!!");
                 solved = true;
-                if($scope.games[currentGame].currentRound === 2) {
+                if($scope.games[$scope.currentGame].currentRound === 2) {
                     $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore * 2;
                 } else {
                     $scope.games[$scope.currentGame].players[currentTurn].score += $scope.currentScore;
