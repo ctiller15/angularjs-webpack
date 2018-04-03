@@ -35,7 +35,9 @@ angular
             let newArr = shuffleArray(arr);
             console.log(newArr);
             // Then pick a few values off of array.
+            let returnedArr = newArr.slice(0,3);
             // Then return array.
+            return returnedArr;
         }
 
         const createDailyDoubles = () => {
@@ -49,7 +51,12 @@ angular
                 }
             }
             console.log(tempArr);
-            pickRandom(tempArr);
+            let dailyDoubleQuestions = pickRandom(tempArr);
+            for(let i = 0; i < dailyDoubleQuestions.length; i++) {
+                dailyDoubleQuestions[i].dailyDouble = true;
+            }
+            console.log(dailyDoubleQuestions);
+            console.log(tempArr);
         };
         
         class Game {

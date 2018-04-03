@@ -26,6 +26,7 @@
         <section ng-disabled="category.clues[$index].asked" ng-class="{question: true, questionAsked: category.clues[$index].asked}" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200, catIndex, $index)">
           <section>
             {{($index + 1) * 200}}
+            <h4 ng-if="clue.dailyDouble">Daily double!</h4>
           </section>
   
         </section>
