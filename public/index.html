@@ -45,7 +45,8 @@
         <h2>player {{$index + 1}}</h2>
         <h3>Score: {{player.score}}</h3>
         <form ng-show="activeDailyDouble && games[currentGame].currentTurn == $index">
-          <input type="number" ng-model="games[currentGame].players[$index].wager"></input>
+          <input type="number" ng-model="games[currentGame].players[$index].wager" min="5" max="{{maxWager}}"></input>
+          <h4>{{maxWager}}</h4>
         </form>
       </section>
     </section>

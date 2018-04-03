@@ -19,6 +19,7 @@ angular
         $scope.playerAnswer = "";
         $scope.activeDailyDouble = false;
         $scope.dailyDoubleDisplay = false;
+        $scope.maxWager = 0;
 
         const max = 18418;
 
@@ -38,6 +39,7 @@ angular
             if(dailyDouble) {
                 $scope.activeDailyDouble = true;
                 $scope.dailyDoubleDisplay = true;
+                setMaxWager(score);
                 console.log("Daily double is active!");
             }
             if(!questionAsked) {
@@ -73,6 +75,27 @@ angular
 
         $scope.displayDDQuestion = () => {
             $scope.dailyDoubleDisplay = false;
+        }
+
+        const setMaxWager = (score) => {
+            console.log(score);
+            $scope.maxWager = score;
+            console.log($scope.maxWager);
+            // console.log($scope.currentScore);
+            // let wagerVal = 5;
+            let currentPlayer = $scope.games[$scope.currentGame].players[$scope.games[$scope.currentGame].currentTurn]
+            // If the player's score is greater than the question value, then the max wager value is equal to their score.
+            console.log(currentPlayer);
+            console.log(currentPlayer.score);
+            if(currentPlayer.score > score) {
+                console.log("Player score is greater than question score");
+                $scope.maxWager = currentPlayer.score;
+            } else {
+                console.log("Question score is greater than player score");
+                $scope.maxWager = score;
+            }
+            console.log($scope.maxWager);
+            // Otherwise, it is equal to the question value.
         }
 
         const randomizeCategory = () => {
