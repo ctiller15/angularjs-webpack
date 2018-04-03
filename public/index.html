@@ -13,7 +13,7 @@
       <h1>round: {{games[currentGame].currentRound}}</h1>
 
       <section ng-show="dailyDoubleDisplay" ng-click="displayDDQuestion()">
-        DAILY DOUBLE!!!!!!!!!!!
+        DAILY DOUBLE!!!!!!!!!!!  Choose your wager!
       </section>
 
       <section ng-class="'question-show'" ng-hide="games[currentGame].board.display || dailyDoubleDisplay">
@@ -44,6 +44,9 @@
       <section ng-class="{player: true, active: games[currentGame].currentTurn == $index}" ng-repeat="player in games[currentGame].players">
         <h2>player {{$index + 1}}</h2>
         <h3>Score: {{player.score}}</h3>
+        <form ng-show="activeDailyDouble && games[currentGame].currentTurn == $index">
+          <input type="number" ng-model="games[currentGame].players[$index].wager"></input>
+        </form>
       </section>
     </section>
 

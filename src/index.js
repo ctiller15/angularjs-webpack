@@ -249,6 +249,7 @@ angular
                     this.score += points;
                 }
                 this.isCurrentTurn = false;
+                this.wager = 0;
             }
         }
         
