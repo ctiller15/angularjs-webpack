@@ -17,13 +17,14 @@ angular
         $scope.currentScore = 0;
         $scope.categoryData = [];
         $scope.playerAnswer = "";
-
+        $scope.activeDailyDouble = false;
+        
         const max = 18418;
 
         let currentAnswer = "";
         let currentAskedQuestion;
         let count = 0;
-        let activeDailyDouble = false;
+
 
         $scope.resetGame = () => {
             $scope.currentGame += 1;
@@ -34,7 +35,7 @@ angular
         $scope.showQuestion = (question, answer, score, parentID, indexID, dailyDouble) => {
             let questionAsked = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked;
             if(dailyDouble) {
-                activeDailyDouble = true;
+                $scope.activeDailyDouble = true;
                 console.log("Daily double is active!");
             }
             if(!questionAsked) {
@@ -156,7 +157,7 @@ angular
         const resetQuestion = () => {
             $scope.games[$scope.currentGame].board.display = true;
             currentAnswer = "";
-            activeDailyDouble = false;
+            $scope.activeDailyDouble = false;
             $scope.currentQuestion = "";
             $scope.playerAnswer = "";   
             currentAskedQuestion.asked = true;

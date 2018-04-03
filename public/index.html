@@ -12,6 +12,10 @@
 
       <h1>round: {{games[currentGame].currentRound}}</h1>
 
+      <!-- <section ng-show="activeDailyDouble" ng-click="displayDDQuestion()">
+        DAILY DOUBLE!!!!!!!!!!!
+      </section> -->
+
       <section ng-class="'question-show'" ng-hide="games[currentGame].board.display">
         <h2>{{currentQuestion}}</h2>
         <form>
@@ -26,7 +30,7 @@
         <section ng-disabled="category.clues[$index].asked" ng-class="{question: true, questionAsked: category.clues[$index].asked}" ng-repeat="clue in category.clues" ng-if="$index < 5" ng-click="showQuestion(clue.question, clue.answer, ($index + 1) * 200, catIndex, $index, clue.dailyDouble)">
           <section>
             {{($index + 1) * 200}}
-            <h4 ng-if="clue.dailyDouble">Daily double!</h4>
+            <!-- <h4 ng-if="clue.dailyDouble">Daily double!</h4> -->
           </section>
   
         </section>
