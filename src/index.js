@@ -18,7 +18,8 @@ angular
         $scope.categoryData = [];
         $scope.playerAnswer = "";
         $scope.activeDailyDouble = false;
-        
+        $scope.dailyDoubleDisplay = false;
+
         const max = 18418;
 
         let currentAnswer = "";
@@ -36,6 +37,7 @@ angular
             let questionAsked = $scope.games[$scope.currentGame].board.boardData[parentID].clues[indexID].asked;
             if(dailyDouble) {
                 $scope.activeDailyDouble = true;
+                $scope.dailyDoubleDisplay = true;
                 console.log("Daily double is active!");
             }
             if(!questionAsked) {
@@ -67,6 +69,10 @@ angular
                 count = 0;
                 resetQuestion();
             }
+        }
+
+        $scope.displayDDQuestion = () => {
+            $scope.dailyDoubleDisplay = false;
         }
 
         const randomizeCategory = () => {
@@ -158,6 +164,7 @@ angular
             $scope.games[$scope.currentGame].board.display = true;
             currentAnswer = "";
             $scope.activeDailyDouble = false;
+            $scope.dailyDoubleDisplay = true;
             $scope.currentQuestion = "";
             $scope.playerAnswer = "";   
             currentAskedQuestion.asked = true;
