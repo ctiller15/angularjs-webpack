@@ -18,8 +18,24 @@ angular
             return(Math.floor(Math.random() * max));
         }
 
+        const pickRandom = (arr) => {
+            // Shuffle array first. (durstenfield shuffle)
+            // Then pick a few values off of array.
+            // Then return array.
+        }
+
         const createDailyDoubles = () => {
-            
+            let tempArr = [];
+            console.log($scope.categoryData);
+            for(let i = 0; i < $scope.categoryData.length; i++) {
+                for(let j = 0; j < 5; j++) {
+                    console.log($scope.categoryData[i].clues[j]);
+                    $scope.categoryData[i].clues[j].dailyDouble = false;
+                    tempArr.push($scope.categoryData[i].clues[j]);
+                }
+            }
+            console.log(tempArr);
+            pickRandom(tempArr);
         };
         
         class Game {
@@ -52,6 +68,7 @@ angular
                 this.board = new Board();
                 this.createBoard = (data) => {
                     this.board.boardData = data;
+                    createDailyDoubles();
                 }
                 this.gameOver = false;
                 this.checkGameStatus = () => {
@@ -110,8 +127,13 @@ angular
         let currentAskedQuestion;
         let count = 0;
 
+
+        
         const getQuestionData = () => {
+            let temp = {};
+            temp.val = 0;
             for(let i = 0; i < 5; i++) {
+
                 $http({
                     method: "GET",
                     url: `http://jservice.io/api/category?&id=${randomizeCategory()}`
@@ -122,9 +144,15 @@ angular
                     });
                     $scope.categoryData.push(response.data);
                 }).then(() => {
-                    $scope.games[$scope.currentGame].createBoard($scope.categoryData);
-                    console.log($scope.games);
-                    $scope.games[$scope.currentGame].checkGameStatus();
+                    temp.val++;
+                    console.log(temp.val);
+                    // if we're on the end of the loop, then we want to create the board and start the game.
+                    if(temp.val === 5) {
+                        $scope.games[$scope.currentGame].createBoard($scope.categoryData);
+                        console.log($scope.games);
+                        $scope.games[$scope.currentGame].checkGameStatus();
+                    }
+
                 });
             }
         }
